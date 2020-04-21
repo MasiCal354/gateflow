@@ -1,6 +1,6 @@
 import pandas as pd
 import requests
-from client import CurvClient
+from .client import CurvClient
 import numpy as np
 
 class CurvDataFrame:
@@ -8,11 +8,13 @@ class CurvDataFrame:
     Parser to read JSON response from CurvClient
     endpoint methods into pandas dataframe.
     """
-    def __init__(self, host, jwt, requests_session=requests.Session()):
+    def __init__(self, host, jwt, organization_id, requests_session=requests.Session()):
         self.__client = CurvClient(host, jwt, requests_session)
-        
-    def addresses(self, organization_id):
-        client = self.get_client()
+        self.__organization_id = organization_id
+
+    def addresses(self):
+        organization_id = self._get_organization_id()
+        client = self._get_client()
         resp = client.list_all_saved_addresses(organization_id)
         if bool(resp['results']) == False:
             df = pd.DataFrame()
@@ -23,8 +25,9 @@ class CurvDataFrame:
             df['created'] = pd.to_datetime(df['created'], utc=True)
         return df
     
-    def address_lists(self, organization_id):
-        client = self.get_client()
+    def address_lists(self):
+        organization_id = self._get_organization_id()
+        client = self._get_client()
         resp = client.list_all_address_lists(organization_id)
         if bool(resp['results']) == False:
             df = pd.DataFrame()
@@ -36,8 +39,12 @@ class CurvDataFrame:
             df['modified'] = pd.to_datetime(df['modified'], utc=True)
         return df
     
-    def currencies(self, organization_id):
-        client = self.get_client()
+    def currencies(self):
+        """
+        problem with bip32_network_versions
+        """
+        organization_id = self._get_organization_id()
+        client = self._get_client()
         resp = client.list_currencies(organization_id)
         if bool(resp['results']) == False:
             df = pd.DataFrame()
@@ -45,8 +52,9 @@ class CurvDataFrame:
             df = pd.DataFrame(resp['results'])
         return df
     
-    def device_keys(self, organization_id):
-        client = self.get_client()
+    def device_keys(self):
+        organization_id = self._get_organization_id()
+        client = self._get_client()
         resp = client.list_device_keys(organization_id)
         if bool(resp['results']) == False:
             df = pd.DataFrame()
@@ -61,9 +69,10 @@ class CurvDataFrame:
             df['device_created'] = pd.to_datetime(df['device_created'], utc=True)
         return df
     
-    def keys(self, organization_id):
-        client = self.get_client()
-        resp = client.list_currencies(organization_id)
+    def keys(self):
+        organization_id = self._get_organization_id()
+        client = self._get_client()
+        resp = client.list_keys(organization_id)
         if bool(resp['results']) == False:
             df = pd.DataFrame()
         else:
@@ -71,11 +80,12 @@ class CurvDataFrame:
             df['created'] = pd.to_datetime(df['created'], utc=True)
         return df
     
-    def service_accounts(self, organization_id):
+    def service_accounts(self):
+        organization_id = self._get_organization_id()
         """
         Still have a problem with api_keys
         """
-        client = self.get_client()
+        client = self._get_client()
         resp = client.list_service_accounts(organization_id)
         if bool(resp['results']) == False:
             df = pd.DataFrame()
@@ -92,11 +102,12 @@ class CurvDataFrame:
             df = df.drop(columns=['state','service_account_details'])
         return df
     
-    def transactions(self, organization_id):
+    def transactions(self):
+        organization_id = self._get_organization_id()
         """
         Still have a problem with user_activity, sources and destinations
         """        
-        client = self.get_client()
+        client = self._get_client()
         resp = client.list_transactions(organization_id)
         if bool(resp['results']) == False:
             df = pd.DataFrame()
@@ -128,8 +139,9 @@ class CurvDataFrame:
             df[float_columns] = df[float_columns].astype('float')
         return df
     
-    def users(self, organization_id):
-        client = self.get_client()
+    def users(self):
+        organization_id = self._get_organization_id()
+        client = self._get_client()
         resp = client.list_users(organization_id)
         if bool(resp['results']) == False:
             df = pd.DataFrame()
@@ -152,8 +164,9 @@ class CurvDataFrame:
             df['created'] = pd.to_datetime(df['created'])
         return df
         
-    def wallets(self, organization_id):
-        client = self.get_client()
+    def wallets(self):
+        organization_id = self._get_organization_id()
+        client = self._get_client()
         resp = client.list_wallets(organization_id)
         if bool(resp['results']) == False:
             df = pd.DataFrame()
@@ -168,8 +181,9 @@ class CurvDataFrame:
             df['modified'] = pd.to_datetime(df['modified'], utc=True)
         return df
     
-    def wallet_groups(self, organization_id):
-        client = self.get_client()
+    def wallet_groups(self):
+        organization_id = self._get_organization_id()
+        client = self._get_client()
         resp = client.list_wallet_groups(organization_id)
         if bool(resp['results']) == False:
             df = pd.DataFrame()
@@ -181,9 +195,10 @@ class CurvDataFrame:
             df['modified'] = pd.to_datetime(df['modified'], utc=True)
         return df
     
-    def wallet_addresses(self, organization_id):
-        client = self.get_client()
-        w = self.wallets(organization_id)['wallet_id']
+    def wallet_addresses(self):
+        organization_id = self._get_organization_id()
+        client = self._get_client()
+        w = self.wallets()['wallet_id']
         frames = list()
         for wallet_id in w:
             resp = client.list_wallet_addresses(organization_id, wallet_id)
@@ -199,5 +214,8 @@ class CurvDataFrame:
         return df
         
     
-    def get_client(self):
+    def _get_client(self):
         return self.__client
+
+    def _get_organization_id(self):
+    	return self.__organization_id

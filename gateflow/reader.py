@@ -5,7 +5,8 @@ from google.oauth2 import service_account
 from oauth2client.service_account import ServiceAccountCredentials
 import gspread
 from pymongo import MongoClient
-from externals.curv import CurvDataFrame
+from .externals.curv import CurvDataFrame
+import requests
 
 class Reader:
     """
@@ -145,37 +146,27 @@ class GBQReader(Reader):
         self.__dataset = dataset
         
 class CurvReader(Reader):
-    def __init__(self, host, jwt, organization_id = ''):
-        self.__gt = CurvDataFrame(host, jwt, organization_id)
+    def __init__(self, host, jwt, organization_id):
+        self.__cdf = CurvDataFrame(host, jwt, organization_id)
     
     def read_table(self, table_name):
-        gt = self.get_gt()
-        df = getattr(gt, table_name)()
+        cdf = self.get_cdf()
+        df = getattr(cdf, table_name)()
         return df
     
     def list_tables(self):
-        gt = self.get_gt()
-        tables = [method for method in dir(gt) if method[:2] != '__' and method[1:4] != 'et_']
+        cdf = self.get_cdf()
+        tables = [method for method in dir(cdf) if method[:1] != '_'] # append public methods of CurvDataFrame
         return tables
     
-    def get_project_id(self):
-        return self.__project_id
+    def get_cdf(self):
+        return self.__cdf
     
-    def set_project_id(self, project_id):
-        self.__project_id = project_id
-    
-    def get_credentials(self):
-        return self.__credentials
-    
-    def set_credentials(self, credentials):
-        self.__credentials = credentials
-    
-    def get_dataset(self):
-        return self.__dataset
-    
-    def set_dataset(self, dataset):
-        self.__dataset = dataset
+    def set_cdf(self, cdf):
+        self.__cdf = cdf
         
-class IndodaxReader():
-    
-class BinanceReader():
+class IndodaxReader(Reader):
+    pass
+
+class BinanceReader(Reader):
+    pass

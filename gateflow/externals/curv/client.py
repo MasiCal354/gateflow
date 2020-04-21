@@ -1,7 +1,7 @@
 import requests
 from requests.exceptions import HTTPError
-from exceptions import CurvRequestException
-from auth import CurvAuth
+from .exceptions import CurvRequestException
+from .auth import CurvAuth
 
 class CurvClient:
     API_VERSION = 'v1.0'

@@ -28,7 +28,7 @@ import gateflow
     - Binance ```BinanceReader()```
     
 ### Supported Target
-- BigQuery ```GbqWriter()```
+- BigQuery ```GBQWriter()```
 
 ### Sample Code
 ```python

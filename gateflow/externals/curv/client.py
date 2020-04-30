@@ -3,13 +3,15 @@ from requests.exceptions import HTTPError
 from .exceptions import CurvRequestException
 from .auth import CurvAuth
 
+
 class CurvClient:
     API_VERSION = 'v1.0'
-    def __init__(self, host, jwt, requests_session = requests.Session()):
+
+    def __init__(self, host, jwt, requests_session=requests.Session()):
         self.__base_url = host + '/api/policy/{}/'.format(self.API_VERSION)
         self.__jwt = jwt
         self.__requests_session = requests_session
-    
+
     def _handle_response(self):
         """Internal helper for handling API responses from the Curv server.
         Raises the appropriate exceptions when necessary; otherwise, returns the
@@ -21,36 +23,36 @@ class CurvClient:
             return response.json()
         except ValueError:
             raise CurvRequestException('Invalid Response: %s' % response.text)
-            
-    def _request(self, method, path, params = None):
+
+    def _request(self, method, path, params=None):
         url = self._get_base_url() + path
         jwt = self._get_jwt()
         requests_session = self._get_requests_session()
         auth = CurvAuth(jwt)
-        
+
         method_arg = {
             'get': 'params',
             'post': 'data',
             'delete': 'data'
         }
-        
+
         kwargs = {method_arg[method]: params}
-        
+
         response = getattr(requests_session, method)(url, auth=auth, **kwargs)
         self._set_response(response)
         return self._handle_response()
-    
+
     def _get(self, path, params=None):
         return self._request('get', path)
-        
+
     def _post(self, path, params=None):
         return self._request('post', path, params)
-    
+
     def _delete(self, path, params=None):
         return self._request('delete', path)
-    
+
     # Curv Endpoint
-    
+
     def list_all_saved_addresses(self, organization_id, params=None):
         path = 'organization/{}/address_book/address_book_entry/'
         path = path.format(organization_id)
@@ -61,7 +63,8 @@ class CurvClient:
         path = path.format(organization_id)
         return self._post(path, params)
 
-    def get_saved_address(self, organization_id, address_book_entry_id, params=None):
+    def get_saved_address(self, organization_id,
+                          address_book_entry_id, params=None):
         path = 'organization/{}/address_book/address_book_entry/{}/'
         path = path.format(organization_id, address_book_entry_id)
         return self._get(path, params)
@@ -76,24 +79,29 @@ class CurvClient:
         path = path.format(organization_id)
         return self._post(path, params)
 
-    def get_address_list(self, organization_id, address_book_list_id, params=None):
+    def get_address_list(self, organization_id,
+                         address_book_list_id, params=None):
         path = 'organization/{}/address_book/address_book_list/{}/'
         path = path.format(organization_id, address_book_list_id)
         return self._get(path, params)
 
-    def list_address_list_entries(self, organization_id, address_book_list_id, params=None):
+    def list_address_list_entries(
+            self, organization_id, address_book_list_id, params=None):
         path = 'organization/{}/address_book/address_book_list/{}/members/'
         path = path.format(organization_id, address_book_list_id)
         return self._get(path, params)
 
-    def add_address_to_list(self, organization_id, address_book_list_id, params=None):
+    def add_address_to_list(self, organization_id,
+                            address_book_list_id, params=None):
         path = 'organization/{}/address_book/address_book_list/{}/members/create_new/'
         path = path.format(organization_id, address_book_list_id)
         return self._post(path, params)
 
-    def remove_address_from_list(self, organization_id, address_book_list_id, address_book_entry_id, params=None):
+    def remove_address_from_list(
+            self, organization_id, address_book_list_id, address_book_entry_id, params=None):
         path = 'organization/{}/address_book/address_book_list/{}/members/{}/'
-        path = path.format(organization_id, address_book_list_id, address_book_entry_id)
+        path = path.format(
+            organization_id, address_book_list_id, address_book_entry_id)
         return self._delete(path, params)
 
     def get_usd_based_exchange_rates(self, params=None):
@@ -106,12 +114,14 @@ class CurvClient:
         path = path.format(organization_id)
         return self._get(path, params)
 
-    def get_currency_information(self, organization_id, currency_id, params=None):
+    def get_currency_information(
+            self, organization_id, currency_id, params=None):
         path = 'organization/{}/currency/{}/'
         path = path.format(organization_id, currency_id)
         return self._get(path, params)
 
-    def get_suggested_transaction_fees(self, organization_id, currency_id, params=None):
+    def get_suggested_transaction_fees(
+            self, organization_id, currency_id, params=None):
         path = 'organization/{}/currency/{}/transaction_fees/'
         path = path.format(organization_id, currency_id)
         return self._get(path, params)
@@ -201,12 +211,14 @@ class CurvClient:
         path = path.format(organization_id)
         return self._post(path, params)
 
-    def self_managed_sign_and_schedule_transaction(self, organization_id, params=None):
+    def self_managed_sign_and_schedule_transaction(
+            self, organization_id, params=None):
         path = 'organization/{}/self_managed_secure_operations/sign_and_push/'
         path = path.format(organization_id)
         return self._post(path, params)
 
-    def self_managed_load_provisioning_package(self, organization_id, params=None):
+    def self_managed_load_provisioning_package(
+            self, organization_id, params=None):
         path = 'organization/{}/self_managed_secure_operations/load_provisioning_package/'
         path = path.format(organization_id)
         return self._post(path, params)
@@ -236,7 +248,8 @@ class CurvClient:
         path = path.format(organization_id)
         return self._get(path, params)
 
-    def get_service_account(self, organization_id, service_account_id, params=None):
+    def get_service_account(self, organization_id,
+                            service_account_id, params=None):
         path = 'organization/{}/service_account/{}/'
         path = path.format(organization_id, service_account_id)
         return self._get(path, params)
@@ -261,7 +274,8 @@ class CurvClient:
         path = path.format(organization_id)
         return self._post(path, params)
 
-    def get_outgoing_transaction(self, organization_id, transaction_id, params=None):
+    def get_outgoing_transaction(
+            self, organization_id, transaction_id, params=None):
         path = 'organization/{}/transaction/{}/'
         path = path.format(organization_id, transaction_id)
         return self._get(path, params)
@@ -271,17 +285,20 @@ class CurvClient:
         path = path.format(organization_id, transaction_id)
         return self._delete(path, params)
 
-    def schedule_transaction(self, organization_id, transaction_id, params=None):
+    def schedule_transaction(self, organization_id,
+                             transaction_id, params=None):
         path = 'organization/{}/transaction/{}/push_to_chain/'
         path = path.format(organization_id, transaction_id)
         return self._post(path, params)
 
-    def vote_on_transaction(self, organization_id, transaction_id, params=None):
+    def vote_on_transaction(self, organization_id,
+                            transaction_id, params=None):
         path = 'organization/{}/transaction/{}/vote/'
         path = path.format(organization_id, transaction_id)
         return self._post(path, params)
 
-    def retrieve_transaction_voting_status(self, organization_id, transaction_id, params=None):
+    def retrieve_transaction_voting_status(
+            self, organization_id, transaction_id, params=None):
         path = 'organization/{}/transaction/{}/voting_status/'
         path = path.format(organization_id, transaction_id)
         return self._get(path, params)
@@ -291,7 +308,8 @@ class CurvClient:
         path = path.format(organization_id)
         return self._post(path, params)
 
-    def create_and_sign_blackbox_transaction(self, organization_id, params=None):
+    def create_and_sign_blackbox_transaction(
+            self, organization_id, params=None):
         path = 'organization/{}/secure_operations/create_and_sign_blackbox/'
         path = path.format(organization_id)
         return self._post(path, params)
@@ -321,44 +339,55 @@ class CurvClient:
         path = path.format(organization_id)
         return self._get(path, params)
 
-    def download_transaction_log_v2_csv_file(self, organization_id, params=None):
+    def download_transaction_log_v2_csv_file(
+            self, organization_id, params=None):
         path = 'organization/{}/transactions_log_v2/csv/'
         path = path.format(organization_id)
         return self._get(path, params)
 
-    def list_transaction_rules_for_wallet(self, organization_id, wallet_id, params=None):
+    def list_transaction_rules_for_wallet(
+            self, organization_id, wallet_id, params=None):
         path = 'organization/{}/wallet/{}/policy/transaction_policy_rule/'
         path = path.format(organization_id, wallet_id)
         return self._get(path, params)
 
-    def create_transaction_rule_for_wallet(self, organization_id, wallet_id, params=None):
+    def create_transaction_rule_for_wallet(
+            self, organization_id, wallet_id, params=None):
         path = 'organization/{}/wallet/{}/policy/transaction_policy_rule/create_new/'
         path = path.format(organization_id, wallet_id)
         return self._post(path, params)
 
-    def get_transaction_rule_for_wallet(self, organization_id, wallet_id, transaction_policy_rule_id, params=None):
+    def get_transaction_rule_for_wallet(
+            self, organization_id, wallet_id, transaction_policy_rule_id, params=None):
         path = 'organization/{}/wallet/{}/policy/transaction_policy_rule/{}/'
-        path = path.format(organization_id, wallet_id, transaction_policy_rule_id)
+        path = path.format(organization_id, wallet_id,
+                           transaction_policy_rule_id)
         return self._get(path, params)
 
-    def delete_transaction_rule_for_wallet(self, organization_id, wallet_id, transaction_policy_rule_id, params=None):
+    def delete_transaction_rule_for_wallet(
+            self, organization_id, wallet_id, transaction_policy_rule_id, params=None):
         path = 'organization/{}/wallet/{}/policy/transaction_policy_rule/{}/'
-        path = path.format(organization_id, wallet_id, transaction_policy_rule_id)
+        path = path.format(organization_id, wallet_id,
+                           transaction_policy_rule_id)
         return self._delete(path, params)
 
-    def list_transaction_rules_for_wallet_group(self, organization_id, wallet_group_id, params=None):
+    def list_transaction_rules_for_wallet_group(
+            self, organization_id, wallet_group_id, params=None):
         path = 'organization/{}/wallet_group/{}/policy/transaction_policy_rule/'
         path = path.format(organization_id, wallet_group_id)
         return self._get(path, params)
 
-    def create_transaction_rule_for_wallet_group(self, organization_id, wallet_group_id, params=None):
+    def create_transaction_rule_for_wallet_group(
+            self, organization_id, wallet_group_id, params=None):
         path = 'organization/{}/wallet_group/{}/policy/transaction_policy_rule/create_new/'
         path = path.format(organization_id, wallet_group_id)
         return self._post(path, params)
 
-    def get_transaction_rule_for_wallet_group(self, organization_id, wallet_group_id, transaction_policy_rule_id, params=None):
+    def get_transaction_rule_for_wallet_group(
+            self, organization_id, wallet_group_id, transaction_policy_rule_id, params=None):
         path = 'organization/{}/wallet_group/{}/policy/transaction_policy_rule/{}/'
-        path = path.format(organization_id, wallet_group_id, transaction_policy_rule_id)
+        path = path.format(organization_id, wallet_group_id,
+                           transaction_policy_rule_id)
         return self._get(path, params)
 
     def list_users(self, organization_id, params=None):
@@ -391,12 +420,14 @@ class CurvClient:
         path = path.format(organization_id)
         return self._get(path, params)
 
-    def get_user_group_information(self, organization_id, user_group_id, params=None):
+    def get_user_group_information(
+            self, organization_id, user_group_id, params=None):
         path = 'organization/{}/user_group/{}/'
         path = path.format(organization_id, user_group_id)
         return self._get(path, params)
 
-    def list_user_group_members(self, organization_id, user_group_id, params=None):
+    def list_user_group_members(
+            self, organization_id, user_group_id, params=None):
         path = 'organization/{}/user_group/{}/group_members/'
         path = path.format(organization_id, user_group_id)
         return self._get(path, params)
@@ -416,17 +447,20 @@ class CurvClient:
         path = path.format(organization_id, wallet_id)
         return self._get(path, params)
 
-    def get_max_withdrawable_funds(self, organization_id, wallet_id, params=None):
+    def get_max_withdrawable_funds(
+            self, organization_id, wallet_id, params=None):
         path = 'organization/{}/wallet/{}/get_max_withdrawable_funds/'
         path = path.format(organization_id, wallet_id)
         return self._post(path, params)
 
-    def list_incoming_transactions(self, organization_id, wallet_id, params=None):
+    def list_incoming_transactions(
+            self, organization_id, wallet_id, params=None):
         path = 'organization/{}/wallet/{}/incoming_transactions/'
         path = path.format(organization_id, wallet_id)
         return self._get(path, params)
 
-    def get_incoming_transaction(self, organization_id, wallet_id, incoming_transaction_id, params=None):
+    def get_incoming_transaction(
+            self, organization_id, wallet_id, incoming_transaction_id, params=None):
         path = 'organization/{}/wallet/{}/incoming_transactions/{}/'
         path = path.format(organization_id, wallet_id, incoming_transaction_id)
         return self._get(path, params)
@@ -446,22 +480,26 @@ class CurvClient:
         path = path.format(organization_id)
         return self._get(path, params)
 
-    def get_wallet_group_information(self, organization_id, wallet_group_id, params=None):
+    def get_wallet_group_information(
+            self, organization_id, wallet_group_id, params=None):
         path = 'organization/{}/wallet_group/{}/'
         path = path.format(organization_id, wallet_group_id)
         return self._get(path, params)
 
-    def list_wallet_group_members(self, organization_id, wallet_group_id, params=None):
+    def list_wallet_group_members(
+            self, organization_id, wallet_group_id, params=None):
         path = 'organization/{}/wallet_group/{}/wallet_group_members/'
         path = path.format(organization_id, wallet_group_id)
         return self._get(path, params)
 
-    def add_wallet_to_wallet_group(self, organization_id, wallet_group_id, params=None):
+    def add_wallet_to_wallet_group(
+            self, organization_id, wallet_group_id, params=None):
         path = 'organization/{}/wallet_group/{}/wallet_group_members/create_new/'
         path = path.format(organization_id, wallet_group_id)
         return self._post(path, params)
 
-    def remove_wallet_from_wallet_group(self, organization_id, wallet_group_id, wallet_id, params=None):
+    def remove_wallet_from_wallet_group(
+            self, organization_id, wallet_group_id, wallet_id, params=None):
         path = 'organization/{}/wallet_group/{}/wallet_group_members/{}/'
         path = path.format(organization_id, wallet_group_id, wallet_id)
         return self._delete(path, params)
@@ -476,54 +514,65 @@ class CurvClient:
         path = path.format(organization_id, wallet_id)
         return self._post(path, params)
 
-    def get_wallet_address(self, organization_id, wallet_id, wallet_address_id, params=None):
+    def get_wallet_address(self, organization_id, wallet_id,
+                           wallet_address_id, params=None):
         path = 'organization/{}/wallet/{}/wallet_address/{}/'
         path = path.format(organization_id, wallet_id, wallet_address_id)
         return self._get(path, params)
 
-    def rename_wallet_address(self, organization_id, wallet_id, wallet_address_id, params=None):
+    def rename_wallet_address(self, organization_id,
+                              wallet_id, wallet_address_id, params=None):
         path = 'organization/{}/wallet/{}/wallet_address/{}/rename/'
         path = path.format(organization_id, wallet_id, wallet_address_id)
         return self._post(path, params)
 
-    def set_wallet_address_visibility(self, organization_id, wallet_id, wallet_address_id, params=None):
+    def set_wallet_address_visibility(
+            self, organization_id, wallet_id, wallet_address_id, params=None):
         path = 'organization/{}/wallet/{}/wallet_address/{}/set_visibility/'
         path = path.format(organization_id, wallet_id, wallet_address_id)
         return self._post(path, params)
 
-    def list_wallet_rules_for_wallet(self, organization_id, wallet_id, params=None):
+    def list_wallet_rules_for_wallet(
+            self, organization_id, wallet_id, params=None):
         path = 'organization/{}/wallet/{}/policy/wallet_policy_rule/'
         path = path.format(organization_id, wallet_id)
         return self._get(path, params)
 
-    def create_wallet_rule_for_wallet(self, organization_id, wallet_id, params=None):
+    def create_wallet_rule_for_wallet(
+            self, organization_id, wallet_id, params=None):
         path = 'organization/{}/wallet/{}/policy/wallet_policy_rule/create_new/'
         path = path.format(organization_id, wallet_id)
         return self._post(path, params)
 
-    def get_wallet_rule_for_wallet(self, organization_id, wallet_id, wallet_policy_rule_id, params=None):
+    def get_wallet_rule_for_wallet(
+            self, organization_id, wallet_id, wallet_policy_rule_id, params=None):
         path = 'organization/{}/wallet/{}/policy/wallet_policy_rule/{}/'
         path = path.format(organization_id, wallet_id, wallet_policy_rule_id)
         return self._get(path, params)
 
-    def delete_wallet_rule_for_wallet(self, organization_id, wallet_id, wallet_policy_rule_id, params=None):
+    def delete_wallet_rule_for_wallet(
+            self, organization_id, wallet_id, wallet_policy_rule_id, params=None):
         path = 'organization/{}/wallet/{}/policy/wallet_policy_rule/{}/'
         path = path.format(organization_id, wallet_id, wallet_policy_rule_id)
         return self._delete(path, params)
 
-    def list_wallet_rules_for_wallet_group(self, organization_id, wallet_group_id, params=None):
+    def list_wallet_rules_for_wallet_group(
+            self, organization_id, wallet_group_id, params=None):
         path = 'organization/{}/wallet_group/{}/policy/wallet_policy_rule/'
         path = path.format(organization_id, wallet_group_id)
         return self._get(path, params)
 
-    def create_wallet_rule_for_wallet_group(self, organization_id, wallet_group_id, params=None):
+    def create_wallet_rule_for_wallet_group(
+            self, organization_id, wallet_group_id, params=None):
         path = 'organization/{}/wallet_group/{}/policy/wallet_policy_rule/create_new/'
         path = path.format(organization_id, wallet_group_id)
         return self._post(path, params)
 
-    def get_wallet_rule_for_wallet_group(self, organization_id, wallet_group_id, wallet_policy_rule_id, params=None):
+    def get_wallet_rule_for_wallet_group(
+            self, organization_id, wallet_group_id, wallet_policy_rule_id, params=None):
         path = 'organization/{}/wallet_group/{}/policy/wallet_policy_rule/{}/'
-        path = path.format(organization_id, wallet_group_id, wallet_policy_rule_id)
+        path = path.format(organization_id, wallet_group_id,
+                           wallet_policy_rule_id)
         return self._get(path, params)
 
     def get_debug_information(self, params=None):
@@ -540,21 +589,20 @@ class CurvClient:
         path = 'stellar-testnet/push_signed_content/'
         path = path.format()
         return self._post(path, params)
-        
+
     # Getter and Setter
-    
+
     def _get_base_url(self):
         return self.__base_url
-    
+
     def _get_jwt(self):
         return self.__jwt
-    
+
     def _get_requests_session(self):
         return self.__requests_session
-    
+
     def _get_response(self):
         return self.__response
-    
+
     def _set_response(self, response):
         self.__response = response
-        

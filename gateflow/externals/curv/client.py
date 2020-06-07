@@ -98,7 +98,11 @@ class CurvClient:
         return self._post(path, params)
 
     def remove_address_from_list(
-            self, organization_id, address_book_list_id, address_book_entry_id, params=None):
+            self,
+            organization_id,
+            address_book_list_id,
+            address_book_entry_id,
+            params=None):
         path = 'organization/{}/address_book/address_book_list/{}/members/{}/'
         path = path.format(
             organization_id, address_book_list_id, address_book_entry_id)
@@ -358,14 +362,22 @@ class CurvClient:
         return self._post(path, params)
 
     def get_transaction_rule_for_wallet(
-            self, organization_id, wallet_id, transaction_policy_rule_id, params=None):
+            self,
+            organization_id,
+            wallet_id,
+            transaction_policy_rule_id,
+            params=None):
         path = 'organization/{}/wallet/{}/policy/transaction_policy_rule/{}/'
         path = path.format(organization_id, wallet_id,
                            transaction_policy_rule_id)
         return self._get(path, params)
 
     def delete_transaction_rule_for_wallet(
-            self, organization_id, wallet_id, transaction_policy_rule_id, params=None):
+            self,
+            organization_id,
+            wallet_id,
+            transaction_policy_rule_id,
+            params=None):
         path = 'organization/{}/wallet/{}/policy/transaction_policy_rule/{}/'
         path = path.format(organization_id, wallet_id,
                            transaction_policy_rule_id)
@@ -384,7 +396,11 @@ class CurvClient:
         return self._post(path, params)
 
     def get_transaction_rule_for_wallet_group(
-            self, organization_id, wallet_group_id, transaction_policy_rule_id, params=None):
+            self,
+            organization_id,
+            wallet_group_id,
+            transaction_policy_rule_id,
+            params=None):
         path = 'organization/{}/wallet_group/{}/policy/transaction_policy_rule/{}/'
         path = path.format(organization_id, wallet_group_id,
                            transaction_policy_rule_id)
@@ -460,7 +476,11 @@ class CurvClient:
         return self._get(path, params)
 
     def get_incoming_transaction(
-            self, organization_id, wallet_id, incoming_transaction_id, params=None):
+            self,
+            organization_id,
+            wallet_id,
+            incoming_transaction_id,
+            params=None):
         path = 'organization/{}/wallet/{}/incoming_transactions/{}/'
         path = path.format(organization_id, wallet_id, incoming_transaction_id)
         return self._get(path, params)
@@ -545,13 +565,21 @@ class CurvClient:
         return self._post(path, params)
 
     def get_wallet_rule_for_wallet(
-            self, organization_id, wallet_id, wallet_policy_rule_id, params=None):
+            self,
+            organization_id,
+            wallet_id,
+            wallet_policy_rule_id,
+            params=None):
         path = 'organization/{}/wallet/{}/policy/wallet_policy_rule/{}/'
         path = path.format(organization_id, wallet_id, wallet_policy_rule_id)
         return self._get(path, params)
 
     def delete_wallet_rule_for_wallet(
-            self, organization_id, wallet_id, wallet_policy_rule_id, params=None):
+            self,
+            organization_id,
+            wallet_id,
+            wallet_policy_rule_id,
+            params=None):
         path = 'organization/{}/wallet/{}/policy/wallet_policy_rule/{}/'
         path = path.format(organization_id, wallet_id, wallet_policy_rule_id)
         return self._delete(path, params)
@@ -569,7 +597,11 @@ class CurvClient:
         return self._post(path, params)
 
     def get_wallet_rule_for_wallet_group(
-            self, organization_id, wallet_group_id, wallet_policy_rule_id, params=None):
+            self,
+            organization_id,
+            wallet_group_id,
+            wallet_policy_rule_id,
+            params=None):
         path = 'organization/{}/wallet_group/{}/policy/wallet_policy_rule/{}/'
         path = path.format(organization_id, wallet_group_id,
                            wallet_policy_rule_id)

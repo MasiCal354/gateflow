@@ -87,8 +87,11 @@ class IndodaxDataFrame:
 
             frame[['order_id', 'submit_time', 'finish_time']] = frame[[
                 'order_id', 'submit_time', 'finish_time']].astype(int)
-            float_columns = ['ordered_amount', 'remaining_amount',
-                             'ordered_paired_amount', 'remaining_paired_amount']
+            float_columns = [
+                'ordered_amount',
+                'remaining_amount',
+                'ordered_paired_amount',
+                'remaining_paired_amount']
             frame[float_columns] = frame[float_columns].astype(float)
             frame['submit_time'] = pd.to_datetime(
                 frame['submit_time'] * 10**9, utc=True)

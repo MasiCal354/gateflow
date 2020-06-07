@@ -10,8 +10,9 @@ import binance_chain.messages
 from binance_chain.environment import BinanceEnvironment
 from binance_chain.constants import PeerType, KlineInterval, OrderSide, OrderStatus, TransactionSide, TransactionType
 from binance_chain.exceptions import (
-    BinanceChainAPIException, BinanceChainRequestException, BinanceChainBroadcastException
-)
+    BinanceChainAPIException,
+    BinanceChainRequestException,
+    BinanceChainBroadcastException)
 
 
 requests.models.json = ujson
@@ -428,8 +429,13 @@ class HttpApiClient(BaseApiClient):
         res = self._post(req_path, data=hex_msg)
         return res
 
-    def get_klines(self, symbol: str, interval: KlineInterval, limit: Optional[int] = 300,
-                   start_time: Optional[int] = None, end_time: Optional[int] = None):
+    def get_klines(
+            self,
+            symbol: str,
+            interval: KlineInterval,
+            limit: Optional[int] = 300,
+            start_time: Optional[int] = None,
+            end_time: Optional[int] = None):
         """Gets candlestick/kline bars for a symbol. Bars are uniquely identified by their open time
 
         https://binance-chain.github.io/api-reference/dex-api/paths.html#apiv1klines
@@ -461,10 +467,16 @@ class HttpApiClient(BaseApiClient):
         return self._get("klines", data=data)
 
     def get_closed_orders(
-        self, address: str, symbol: Optional[str] = None, status: Optional[OrderStatus] = None,
-        side: Optional[OrderSide] = None, offset: Optional[int] = 0, limit: Optional[int] = 500,
-        start_time: Optional[int] = None, end_time: Optional[int] = None, total: Optional[int] = 0
-    ):
+            self,
+            address: str,
+            symbol: Optional[str] = None,
+            status: Optional[OrderStatus] = None,
+            side: Optional[OrderSide] = None,
+            offset: Optional[int] = 0,
+            limit: Optional[int] = 500,
+            start_time: Optional[int] = None,
+            end_time: Optional[int] = None,
+            total: Optional[int] = 0):
         """Gets closed (filled and cancelled) orders for a given address
 
         https://binance-chain.github.io/api-reference/dex-api/paths.html#apiv1ordersclosed
@@ -509,9 +521,12 @@ class HttpApiClient(BaseApiClient):
         return self._get("orders/closed", data=data)
 
     def get_open_orders(
-        self, address: str, symbol: Optional[str] = None, offset: Optional[int] = 0, limit: Optional[int] = 500,
-        total: Optional[int] = 0
-    ):
+            self,
+            address: str,
+            symbol: Optional[str] = None,
+            offset: Optional[int] = 0,
+            limit: Optional[int] = 500,
+            total: Optional[int] = 0):
         """Gets open orders for a given address
 
         https://binance-chain.github.io/api-reference/dex-api/paths.html#apiv1ordersopen
@@ -581,12 +596,19 @@ class HttpApiClient(BaseApiClient):
         return self._get("ticker/24hr", data=data)
 
     def get_trades(
-        self, address: Optional[str] = None, symbol: Optional[str] = None,
-        side: Optional[OrderSide] = None, quote_asset: Optional[str] = None, buyer_order_id: Optional[str] = None,
-        seller_order_id: Optional[str] = None, height: Optional[str] = None, offset: Optional[int] = 0,
-        limit: Optional[int] = 500, start_time: Optional[int] = None, end_time: Optional[int] = None,
-        total: Optional[int] = 0
-    ):
+            self,
+            address: Optional[str] = None,
+            symbol: Optional[str] = None,
+            side: Optional[OrderSide] = None,
+            quote_asset: Optional[str] = None,
+            buyer_order_id: Optional[str] = None,
+            seller_order_id: Optional[str] = None,
+            height: Optional[str] = None,
+            offset: Optional[int] = 0,
+            limit: Optional[int] = 500,
+            start_time: Optional[int] = None,
+            end_time: Optional[int] = None,
+            total: Optional[int] = 0):
         """Gets a list of historical trades
 
         https://binance-chain.github.io/api-reference/dex-api/paths.html#apiv1trades
@@ -640,11 +662,17 @@ class HttpApiClient(BaseApiClient):
         return self._get("trades", data=data)
 
     def get_transactions(
-        self, address: str, symbol: Optional[str] = None,
-        side: Optional[TransactionSide] = None, tx_asset: Optional[str] = None,
-        tx_type: Optional[TransactionType] = None, height: Optional[str] = None, offset: Optional[int] = 0,
-        limit: Optional[int] = 500, start_time: Optional[int] = None, end_time: Optional[int] = None
-    ):
+            self,
+            address: str,
+            symbol: Optional[str] = None,
+            side: Optional[TransactionSide] = None,
+            tx_asset: Optional[str] = None,
+            tx_type: Optional[TransactionType] = None,
+            height: Optional[str] = None,
+            offset: Optional[int] = 0,
+            limit: Optional[int] = 500,
+            start_time: Optional[int] = None,
+            end_time: Optional[int] = None):
         """Gets a list of transactions
 
         https://binance-chain.github.io/api-reference/dex-api/paths.html#apiv1transactions
@@ -692,9 +720,13 @@ class HttpApiClient(BaseApiClient):
         return self._get("transactions", data=data)
 
     def get_block_exchange_fee(
-        self, address: Optional[str] = None, offset: Optional[int] = 0, total: Optional[int] = 0,
-        limit: Optional[int] = 500, start_time: Optional[int] = None, end_time: Optional[int] = None
-    ):
+            self,
+            address: Optional[str] = None,
+            offset: Optional[int] = 0,
+            total: Optional[int] = 0,
+            limit: Optional[int] = 500,
+            start_time: Optional[int] = None,
+            end_time: Optional[int] = None):
         """Trading fee of the address grouped by block
 
         https://docs.binance.org/api-reference/dex-api/paths.html#apiv1block-exchange-fee

@@ -115,8 +115,10 @@ class Wallet(BaseWallet):
             self._public_key, self._env.hrp)
 
     @classmethod
-    def create_random_wallet(cls, language: MnemonicLanguage = MnemonicLanguage.ENGLISH,
-                             env: Optional[BinanceEnvironment] = None):
+    def create_random_wallet(
+            cls,
+            language: MnemonicLanguage = MnemonicLanguage.ENGLISH,
+            env: Optional[BinanceEnvironment] = None):
         """Create wallet with random mnemonic code
 
         :return:

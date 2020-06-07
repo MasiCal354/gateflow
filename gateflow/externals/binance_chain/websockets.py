@@ -51,7 +51,8 @@ class ReconnectingWebsocket:
                             evt = await asyncio.wait_for(self._socket.recv(), timeout=self._ping_timeout)
                         except asyncio.TimeoutError:
                             self._log.debug(
-                                "no message in {} seconds".format(self._ping_timeout))
+                                "no message in {} seconds".format(
+                                    self._ping_timeout))
                             await self.send_keepalive()
                         except asyncio.CancelledError:
                             self._log.debug("cancelled error")

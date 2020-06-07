@@ -7,8 +7,17 @@ from collections import OrderedDict
 from binance_chain.wallet import BaseWallet
 from binance_chain.constants import TimeInForce, OrderSide, OrderType, VoteOption
 from binance_chain.protobuf.dex_pb2 import (
-    NewOrder, CancelOrder, TokenFreeze, TokenUnfreeze, StdTx, StdSignature, Send, Input, Output, Token, Vote
-)
+    NewOrder,
+    CancelOrder,
+    TokenFreeze,
+    TokenUnfreeze,
+    StdTx,
+    StdSignature,
+    Send,
+    Input,
+    Output,
+    Token,
+    Vote)
 from binance_chain.utils.encode_utils import encode_number, varint_encode
 from binance_chain.utils.segwit_addr import decode_address
 
@@ -114,8 +123,17 @@ class NewOrderMsg(Msg):
 
     AMINO_MESSAGE_TYPE = b"CE6DC043"
 
-    def __init__(self, symbol: str, time_in_force: TimeInForce, order_type: OrderType, side: OrderSide,
-                 price: Union[int, float, Decimal], quantity: Union[int, float, Decimal],
+    def __init__(self,
+                 symbol: str,
+                 time_in_force: TimeInForce,
+                 order_type: OrderType,
+                 side: OrderSide,
+                 price: Union[int,
+                              float,
+                              Decimal],
+                 quantity: Union[int,
+                                 float,
+                                 Decimal],
                  wallet: Optional[BaseWallet] = None):
         """NewOrder transaction creates a new order to buy and sell tokens on Binance DEX.
 
@@ -200,7 +218,14 @@ class LimitOrderMsg(NewOrderMsg):
 
 class LimitOrderBuyMsg(LimitOrderMsg):
 
-    def __init__(self, symbol: str, price: Union[int, float, Decimal], quantity: Union[int, float, Decimal],
+    def __init__(self,
+                 symbol: str,
+                 price: Union[int,
+                              float,
+                              Decimal],
+                 quantity: Union[int,
+                                 float,
+                                 Decimal],
                  time_in_force: TimeInForce = TimeInForce.GOOD_TILL_EXPIRE,
                  wallet: Optional[BaseWallet] = None):
         """LimitOrderBuyMsg transaction creates a new limit order buy message on Binance DEX.
@@ -223,7 +248,14 @@ class LimitOrderBuyMsg(LimitOrderMsg):
 
 class LimitOrderSellMsg(LimitOrderMsg):
 
-    def __init__(self, symbol: str, price: Union[int, float, Decimal], quantity: Union[int, float, Decimal],
+    def __init__(self,
+                 symbol: str,
+                 price: Union[int,
+                              float,
+                              Decimal],
+                 quantity: Union[int,
+                                 float,
+                                 Decimal],
                  time_in_force: TimeInForce = TimeInForce.GOOD_TILL_EXPIRE,
                  wallet: Optional[BaseWallet] = None):
         """LimitOrderSellMsg transaction creates a new limit order sell message on Binance DEX.
@@ -288,8 +320,12 @@ class FreezeMsg(Msg):
 
     AMINO_MESSAGE_TYPE = b"E774B32D"
 
-    def __init__(self, symbol: str,
-                 amount: Union[int, float, Decimal], wallet: Optional[BaseWallet] = None):
+    def __init__(self,
+                 symbol: str,
+                 amount: Union[int,
+                               float,
+                               Decimal],
+                 wallet: Optional[BaseWallet] = None):
         """Freeze transaction moves the amount of the tokens into a frozen state,
         in which it cannot be used to transfer or send new orders.
 
@@ -326,8 +362,12 @@ class UnFreezeMsg(Msg):
 
     AMINO_MESSAGE_TYPE = b"6515FF0D"
 
-    def __init__(self, symbol: str,
-                 amount: Union[int, float, Decimal], wallet: Optional[BaseWallet] = None):
+    def __init__(self,
+                 symbol: str,
+                 amount: Union[int,
+                               float,
+                               Decimal],
+                 wallet: Optional[BaseWallet] = None):
         """Turn the amount of frozen tokens back to free state.
 
         :param symbol: token symbol, in full name with "-" suffix
@@ -426,8 +466,14 @@ class TransferMsg(Msg):
 
     AMINO_MESSAGE_TYPE = b"2A2C87FA"
 
-    def __init__(self, symbol: str, amount: Union[int, float, Decimal],
-                 to_address: str, wallet: Optional[BaseWallet] = None, memo: str = ''):
+    def __init__(self,
+                 symbol: str,
+                 amount: Union[int,
+                               float,
+                               Decimal],
+                 to_address: str,
+                 wallet: Optional[BaseWallet] = None,
+                 memo: str = ''):
         """Transferring funds between different addresses.
 
         :param symbol: token symbol, in full name with "-" suffix
@@ -495,8 +541,12 @@ class MultiTransferMsg(Msg):
 
     AMINO_MESSAGE_TYPE = b"2A2C87FA"
 
-    def __init__(self, transfers: List[Transfer],
-                 to_address: str, wallet: Optional[BaseWallet] = None, memo: str = ''):
+    def __init__(
+            self,
+            transfers: List[Transfer],
+            to_address: str,
+            wallet: Optional[BaseWallet] = None,
+            memo: str = ''):
         """Transferring funds between different addresses.
 
         :param transfers: List of tokens and amounts to send

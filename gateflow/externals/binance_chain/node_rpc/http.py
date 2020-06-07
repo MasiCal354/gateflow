@@ -74,7 +74,9 @@ class HttpRpcClient(BaseHttpRpcClient):
         rpc_request = self._get_rpc_request(path, **kwargs)
 
         response = self.session.post(
-            self._endpoint_url, data=rpc_request.encode(), headers=self._get_headers())
+            self._endpoint_url,
+            data=rpc_request.encode(),
+            headers=self._get_headers())
 
         return self._handle_response(response)
 
@@ -320,7 +322,9 @@ class HttpRpcClient(BaseHttpRpcClient):
         return self._request('blockchain', data=data)
 
     def broadcast_msg(
-            self, msg: Msg, request_type: RpcBroadcastRequestType = RpcBroadcastRequestType.SYNC):
+            self,
+            msg: Msg,
+            request_type: RpcBroadcastRequestType = RpcBroadcastRequestType.SYNC):
         """Wrapper function fro broadcasting transactions
 
         https://binance-chain.github.io/api-reference/node-rpc.html#broadcasttxasync

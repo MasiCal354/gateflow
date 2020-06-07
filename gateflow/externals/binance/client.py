@@ -3258,7 +3258,10 @@ class Client(object):
 
         """
         return self._request_margin_api(
-            'get', 'lending/daily/userRedemptionQuota', signed=True, data=params)
+            'get',
+            'lending/daily/userRedemptionQuota',
+            signed=True,
+            data=params)
 
     def redeem_lending_product(self, **params):
         """Redeem Flexible Product

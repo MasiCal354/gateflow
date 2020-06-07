@@ -7,10 +7,11 @@ import gspread
 from pymongo import MongoClient
 from .externals.curv import CurvDataFrame
 from .externals.indodax import IndodaxDataFrame
+from .externals.appsflyer import AppsFlyerClient
 import requests
 
 
-class Reader:
+class BaseReader:
     """
     Parent Class for all reader in this module.
     The structure of this class is to make all
@@ -42,7 +43,7 @@ class Reader:
         return frames
 
 
-class SQLReader(Reader):
+class SQLReader(BaseReader):
     def __init__(self, db_uri):
         self.__engine = create_engine(db_uri)
 
@@ -66,7 +67,7 @@ class SQLReader(Reader):
         self.__engine = engine
 
 
-class MongoReader(Reader):
+class MongoReader(BaseReader):
     def __init__(self, db_uri, db_name):
         self.__db = MongoClient(db_uri)[db_name]
 
@@ -87,7 +88,7 @@ class MongoReader(Reader):
         self.__db = db
 
 
-class GoogleSheetReader(Reader):
+class GoogleSheetReader(BaseReader):
     def __init__(self, service_account_path, file_key):
         scope = ['https://spreadsheets.google.com/feeds',
                  'https://www.googleapis.com/auth/drive']
@@ -116,7 +117,7 @@ class GoogleSheetReader(Reader):
         self.__sh = sh
 
 
-class GBQReader(Reader):
+class GBQReader(BaseReader):
     def __init__(self, project_id, service_account_path, dataset):
         self.__project_id = project_id
         self.__credentials = service_account.Credentials.from_service_account_file(
@@ -155,7 +156,7 @@ class GBQReader(Reader):
         self.__dataset = dataset
 
 
-class CurvReader(Reader):
+class CurvReader(BaseReader):
     def __init__(self, host, jwt, organization_id):
         self.__cdf = CurvDataFrame(host, jwt, organization_id)
 
@@ -177,7 +178,7 @@ class CurvReader(Reader):
         self.__cdf = cdf
 
 
-class IndodaxReader(Reader):
+class IndodaxReader(BaseReader):
     def __init__(self, key, secret, pairs,
                  requests_session=requests.Session()):
         self.__idf = IndodaxDataFrame(key, secret, pairs, requests_session)
@@ -200,5 +201,38 @@ class IndodaxReader(Reader):
         self.__idf = idf
 
 
-class BinanceChainReader(Reader):
-    pass
+class AppsFlyerReader(BaseReader):
+    def __init__(self, app_id, api_token, requests_session=requests.Session()):
+        self.__client = AppsFlyerClient(app_id, api_token, requests_session)
+        
+    def read_table(self, table_name):
+        client = self.get_client()
+        params = self.get_params()
+        df = getattr(client, table_name)(params)
+        return df
+
+    def list_tables(self):
+        client = self.get_client()
+        tables = [method for method in dir(client) if method[:1] != '_']
+        return tables
+
+    def get_params(self):
+        return self.__params
+    
+    def set_params(self, params):
+        """
+        params = {
+            'from':from_date,
+            'to':to_date,
+            'timezone':timezone,
+            'additional_fields':additional_fields,
+            'reattr':boolean
+        }
+        """
+        self.__params = params
+    
+    def get_client(self):
+        return self.__client
+
+    def set_client(self, client):
+        self.__client = client

@@ -200,7 +200,9 @@ class HttpApiSigningClient(BaseApiSigningClient):
         return self._post('order/broadcast', json=data)
 
     def sign_cancel_order(
-            self, msg: binance_chain.messages.CancelOrderMsg, wallet_name: str):
+            self,
+            msg: binance_chain.messages.CancelOrderMsg,
+            wallet_name: str):
         """Sign a message using a signing service
 
         :param msg: Type of NewOrderMsg
@@ -225,7 +227,9 @@ class HttpApiSigningClient(BaseApiSigningClient):
         return self._post('order/cancel/sign', json=data)
 
     def broadcast_cancel_order(
-            self, msg: binance_chain.messages.CancelOrderMsg, wallet_name: str):
+            self,
+            msg: binance_chain.messages.CancelOrderMsg,
+            wallet_name: str):
         """Sign and broadcast a message using a signing service
 
         :param msg: Type of NewOrderMsg
@@ -498,7 +502,11 @@ class AsyncHttpApiSigningClient(BaseApiSigningClient):
                      requests_params: Optional[Dict] = None):
 
         return AsyncHttpApiSigningClient(
-            endpoint, username, password, requests_params=requests_params, loop=loop)
+            endpoint,
+            username,
+            password,
+            requests_params=requests_params,
+            loop=loop)
 
     def _init_session(self, **kwargs):
 

@@ -166,8 +166,13 @@ class CurvDataFrame:
             df['completed_timestamp'] = pd.to_datetime(
                 df['completed_timestamp'], utc=True)
             df = df.drop(columns=['block', 'details', 'timestamps'])
-            float_columns = ['fees', 'gas_used', 'gas_price',
-                             'gas_limit', 'fee_per_byte', 'max_length_in_bytes']
+            float_columns = [
+                'fees',
+                'gas_used',
+                'gas_price',
+                'gas_limit',
+                'fee_per_byte',
+                'max_length_in_bytes']
             df[float_columns] = df[float_columns].astype('float')
         return df
 

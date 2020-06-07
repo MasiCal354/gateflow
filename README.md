@@ -1,11 +1,6 @@
 # GateFlow
 **GateFlow** is an open-source project to build ETL (Extract Transform and Load) data pipeline.
 
-### Installation
-```bash
-pip install git+https://github.com/MasiCal354/gateflow.git
-```
-
 ### Import Library
 ```python
 import gateflow

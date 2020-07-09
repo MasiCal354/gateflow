@@ -1,6 +1,13 @@
 # GateFlow
 **GateFlow** is an open-source project to build ETL (Extract Transform and Load) data pipeline.
 
+### Install Gateflow
+I recommend to use conda for this module installation.
+
+```bash
+conda env create -f gateflow.yml
+```
+
 ### Import Library
 ```python
 import gateflow

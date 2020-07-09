@@ -43,7 +43,7 @@ db_info = {
     'additional_string': '<additional_string>'
 }
 
-db_uri = gf.construct_uri(db_info)
+db_uri = gf.construct_uri(**db_info)
 
 ## Read table using SQLReader
 
